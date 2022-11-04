@@ -1,0 +1,9 @@
+[submodule "lib/micropython-lib"]
+	path = lib/micropython-lib
+	url = https://github.com/micropython/micropython-lib.git
+[submodule "lib/test_support"]
+	path = lib/test_support
+	url = ../test_support.git
+[submodule "lib/micropython-mock-machine"]
+	path = lib/micropython-mock-machine
+	url = git@gitlab.pi.planetinnovation.com.au:degraves/library/micropython-mock-machine.git
