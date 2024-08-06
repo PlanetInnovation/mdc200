@@ -15,16 +15,21 @@
 # pylint: disable = E0401
 import unittest
 
-from mock_machine import Pin
-from mocks import MockUART
+from mock_machine import Pin, UART
+
+# from mocks import MockUART
 from test_support.testing_support import async_test
 
 from micropython_mdc200 import MDC200
 
 
 class TestMDC200(unittest.TestCase):
+
+    test_barcode = b"A23457098"
+    test_barcode_with_protocol = b"\x02A23457098\x03\r\n"
+
     def setUp(self):
-        self.uart = MockUART()
+        self.uart = UART()
         self.trigger_pin = Pin(None)
         self.reader = MDC200(self.uart, self.trigger_pin)
 
@@ -33,13 +38,20 @@ class TestMDC200(unittest.TestCase):
         """
         Test that the barcode scanner will successfully scan a valid C128 barcode
         """
-        test_barcode = "A23457098"
-        self.uart.write(test_barcode)
+        import uasyncio as asyncio
 
-        # TODO: this isn't working
+        # Simulate scanner response: inject barcode data after a short delay
+        # This mimics real hardware that responds to trigger signal
+        async def inject_barcode_response():
+            await asyncio.sleep_ms(10)  # Small delay to let purge complete
+            self.uart.inject_data(self.test_barcode_with_protocol)
+
+        # Start injection task and read concurrently
+        asyncio.create_task(inject_barcode_response())
+
         b = await self.reader.read_barcode()
 
-        self.assertEqual(b, test_barcode)
+        self.assertEqual(b, self.test_barcode)
 
 
 if __name__ == "__main__":

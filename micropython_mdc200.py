@@ -20,8 +20,7 @@ from micropython import const
 try:
     from machine import UART, Pin
 except ImportError:
-    from mock_machine import Pin
-    from mocks import MockUART as UART
+    from mock_machine import Pin, UART
 
 
 class MDC200:

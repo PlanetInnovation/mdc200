@@ -29,7 +29,7 @@ tests: submodules
 	@echo "-----------------------------------"
 	@echo "Execute unit tests..."
 	@CMD="micropython -m unittest_junit discover -s test"; \
-	export MICROPYPATH=lib/test_support:lib/micropython-mock-machine:.frozen; \
+	export MICROPYPATH=lib/test_support:lib/micropython-mock-machine:lib/micropython-lib/python-stdlib/logging:.frozen; \
 	if [ -n "$${MICROPYTHON_UNIX_UNITTEST}" ]; then \
 	  $${CMD}; \
 	else \
