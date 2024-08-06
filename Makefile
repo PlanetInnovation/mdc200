@@ -18,18 +18,25 @@ help:
 	@echo "Please use 'make target' where target is one of:"
 	@grep -h ':\s\+##' Makefile | column -t -s# | awk -F ":" '{ print "  " $$1 "" $$2 }'
 
+
+# Run unit tests job
+# This job will automatically be run inside a docker container (if not already) which includes the unittest library
+# and its direct dependencies.
+# Any additional project test dependencies should be added to the `export MICROPYPATH` line below instead/alongside the `lib` entry.
 .PHONY: tests
 tests:  ## Execute unit tests (inside the unix port).
 tests: submodules
 	@echo "-----------------------------------"
-		@echo "Execute unit tests..."
-	docker run -ti --rm -v $$(pwd):/code -w /code \
-		-v $$(pwd)/lib/micropython-lib/python-stdlib:/usr/lib/mp-lib \
-		-v $$(pwd)/lib/test_support:/usr/lib/test_support \
-		-v $$(pwd)/lib/micropython-mock-machine:/usr/lib/mock_machine \
-		-e MICROPYPATH=/usr/lib/mp-lib/unittest:/usr/lib/mp-lib/argparse:/usr/lib/mp-lib/fnmatch:/usr/lib/mp-lib/os.path:/usr/lib/test_support:/usr/lib/mock_machine:/usr/lib/mp-lib/os.path:.frozen:'' \
-		micropython/unix \
-		micropython-dev test/test_micropython_mdc200.py
+	@echo "Execute unit tests..."
+	@CMD="micropython -m unittest_junit discover -s test"; \
+	export MICROPYPATH=lib/test_support:lib/micropython-mock-machine:.frozen; \
+	if [ -n "$${MICROPYTHON_UNIX_UNITTEST}" ]; then \
+	  $${CMD}; \
+	else \
+	  docker run -t --rm -eMICROPYPATH="$${MICROPYPATH}" -v $$(pwd):/code -w /code \
+	  gitlab.pi.planetinnovation.com.au:5004/degraves/ci/micropython-unix-unittest:latest \
+	  $${CMD}; \
+	fi
 
 .PHONY: checks
 checks:  ## Run static analysis
@@ -39,8 +46,11 @@ checks: submodules
 .PHONY: init
 init:  ## Initialise the repository and submodules
 	git init
+	git symbolic-ref HEAD refs/heads/main
 	git submodule add https://github.com/micropython/micropython-lib.git lib/micropython-lib
 	pre-commit install
+	pre-commit run --all-files
+	git add --all
 
 .PHONY: doc-autobuild
 doc-autobuild: ## Autobuild the docs so a browser can monitor changes
@@ -56,3 +66,4 @@ doc-autobuild: ## Autobuild the docs so a browser can monitor changes
 submodules: ## Initalise submodules
 submodules: lib/micropython-lib/README.md
 submodules: lib/test_support/README.md
+submodules: lib/micropython-mock-machine/README.md

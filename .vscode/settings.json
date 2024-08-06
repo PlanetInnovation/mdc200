@@ -1,0 +1,25 @@
+{
+    "python.linting.enabled": true,
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none"
+    },
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "99"
+    ],
+    // pylint doesn't honor extraPaths settings
+    "python.linting.pylintEnabled": false,
+    "python.linting.pylintArgs": [
+        "--disable=W"
+    ],
+    "python.linting.flake8Enabled": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "plantuml.server": "https://plantuml.sw.pi.planetinnovation.com.au/",
+    "plantuml.render": "PlantUMLServer",
+}

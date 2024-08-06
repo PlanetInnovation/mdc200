@@ -6,4 +6,4 @@
 	url = ../test_support.git
 [submodule "lib/micropython-mock-machine"]
 	path = lib/micropython-mock-machine
-	url = git@gitlab.pi.planetinnovation.com.au:degraves/library/micropython-mock-machine.git
+	url = ../micropython-mock-machine.git
