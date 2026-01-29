@@ -1,14 +1,7 @@
+# MIT license; Copyright (c) 2022, Planet Innovation
+# 436 Elgar Road, Box Hill VIC 3128 Australia
+# Phone: +61 3 9945 7510
 #
-#   Copyright (c) 2022, Planet Innovation
-#   436 Elgar Road, Box Hill VIC 3128 Australia
-#   Phone: +61 3 9945 7510
-#
-#   The copyright to the computer program(s) herein is the property of
-#   Planet Innovation, Australia.
-#   The program(s) may be used and/or copied only with the written permission
-#   of Planet Innovation or in accordance with the terms and conditions
-#   stipulated in the agreement/contract under which the program(s) have been
-#   supplied.
 
 default: help
 
@@ -29,7 +22,7 @@ tests: submodules
 	@echo "-----------------------------------"
 	@echo "Execute unit tests..."
 	@CMD="micropython -m unittest_junit discover -s test"; \
-	export MICROPYPATH=lib/test_support:lib/micropython-mock-machine:lib/micropython-lib/python-stdlib/logging:.frozen; \
+	export MICROPYPATH=lib/micropython-mock-machine:lib/micropython-lib/python-stdlib/logging:.frozen; \
 	if [ -n "$${MICROPYTHON_UNIX_UNITTEST}" ]; then \
 	  $${CMD}; \
 	else \
@@ -65,5 +58,4 @@ doc-autobuild: ## Autobuild the docs so a browser can monitor changes
 .PHONY: submodules
 submodules: ## Initalise submodules
 submodules: lib/micropython-lib/README.md
-submodules: lib/test_support/README.md
 submodules: lib/micropython-mock-machine/README.md

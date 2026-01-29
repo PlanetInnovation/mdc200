@@ -1,0 +1,6 @@
+{
+    "urls": [
+        ["micropython_mdc200.py", "github:planetinnovation/micropython-mdc200/micropython_mdc200.py"]
+    ],
+    "version": "1.0.0"
+}

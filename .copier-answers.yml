@@ -1,7 +1,0 @@
-# Changes here will be overwritten by Copier
-_commit: v0.1-8-ge804b42
-_src_path: git@gitlab.pi.planetinnovation.com.au:degraves/template/micropython_library_template.git
-gitlab_tag: aws-525-degraves
-library_description: A MicroPython driver for the Opticon MDC-200 Barcode Scanner.
-library_name: micropython_mdc200
-single_file_module: true

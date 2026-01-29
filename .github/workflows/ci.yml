@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit checks
+        run: pre-commit run --all-files
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Run tests in MicroPython container
+        run: |
+          docker run --rm -v $PWD:/workspace -w /workspace \
+            -e MICROPYPATH=.:lib/micropython-mock-machine:lib/micropython-lib/python-stdlib/unittest:lib/micropython-lib/python-stdlib/logging:.frozen \
+            micropython/unix:v1.23.0 \
+            sh -c "for test in test/test_*.py; do micropython \$test || exit 1; done"
