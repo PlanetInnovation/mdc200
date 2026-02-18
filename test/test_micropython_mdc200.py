@@ -6,48 +6,6 @@
 # pylint: disable = E0401
 import unittest
 
-# Polyfill for RingIO if not available (for testing in standard MicroPython)
-try:
-    from micropython import RingIO
-except (ImportError, AttributeError):
-    import micropython
-
-    class RingIO:
-        """Simple RingIO implementation for testing."""
-
-        def __init__(self, size):
-            self._buf = bytearray(size)
-            self._size = size
-            self._write_pos = 0
-            self._read_pos = 0
-            self._available = 0
-
-        def any(self):
-            return self._available
-
-        def write(self, data):
-            written = 0
-            for byte in data:
-                if self._available < self._size:
-                    self._buf[self._write_pos] = byte
-                    self._write_pos = (self._write_pos + 1) % self._size
-                    self._available += 1
-                    written += 1
-                else:
-                    break
-            return written
-
-        def read(self, n=None):
-            if n is None:
-                n = self._available
-            result = bytearray()
-            for _ in range(min(n, self._available)):
-                result.append(self._buf[self._read_pos])
-                self._read_pos = (self._read_pos + 1) % self._size
-                self._available -= 1
-            return bytes(result)
-
-    micropython.RingIO = RingIO
 
 from mock_machine import Pin, UART
 

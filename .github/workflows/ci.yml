@@ -34,5 +34,5 @@ jobs:
         run: |
           docker run --rm -v $PWD:/workspace -w /workspace \
             -e MICROPYPATH=.:lib/micropython-mock-machine:lib/micropython-lib/python-stdlib/unittest:lib/micropython-lib/python-stdlib/logging:.frozen \
-            micropython/unix:v1.23.0 \
+            micropython/unix:v1.24.1 \
             sh -c "for test in test/test_*.py; do micropython \$test || exit 1; done"
